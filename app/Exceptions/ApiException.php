@@ -9,11 +9,13 @@ use Illuminate\Http\Request;
 abstract class ApiException extends Exception
 {
     protected int $statusCode;
+    protected string $messageCode;
 
-    public function __construct(string $message = "", int $statusCode = 500, \Throwable $previous = null)
+    public function __construct(string $message = "", int $statusCode = 500, string $messageCode ="INTERNAL_SERVER_ERROR", \Throwable $previous = null)
     {
         parent::__construct($message, $statusCode, $previous);
         $this->statusCode = $statusCode;
+        $this->messageCode = $messageCode;
     }
 
     public function getStatusCode(): int
@@ -21,12 +23,8 @@ abstract class ApiException extends Exception
         return $this->statusCode;
     }
 
-    public function render(Request $request): JsonResponse
+    public function getMessageCode(): string
     {
-        return response()->json([
-            'success' => false,
-            'message' => $this->getMessage(),
-            'status_code' => $this->statusCode,
-        ], $this->statusCode);
+        return $this->messageCode;
     }
 }

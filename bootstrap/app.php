@@ -1,7 +1,9 @@
 <?php
 
 use App\Exceptions\ApiException;
+use App\Http\Middleware\AcceptJsonMiddleware;
 use App\Http\Middleware\AuthorizationMiddleware;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'authorize' => AuthorizationMiddleware::class,
         ]);
+        $middleware->prepend([AcceptJsonMiddleware::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (ApiException $exception, Request $request) {
@@ -26,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'success' => false,
                     'message' => $exception->getMessage(),
+                    'message_code' => $exception->getMessageCode(),
                 ], $exception->getStatusCode());
             }
         });
@@ -34,6 +38,7 @@ return Application::configure(basePath: dirname(__DIR__))
             $payload = [
                 'success' =>  false,
                 'message' => 'the data submitted does not match the required form',
+                'message_code' => 'VALIDATION_ERROR',
                 'errors' =>$exception->errors()
             ];
             if($request->is('api/*') || $request->wantsJson()){
@@ -41,10 +46,22 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
+        $exceptions->render(function(AuthenticationException $exception, Request $request){
+               $payload = [
+                'success' =>  false,
+                'message' => 'unauthenticated',
+                'message_code' => 'UNAUTHENTICATED_ACCESS',
+            ];
+            if($request->is('api/*') || $request->wantsJson()){
+                return response()->json($payload, 401);
+            }
+        });
+
         $exceptions->render(function (Throwable $exception, Request $request) {
             $payload = [
                 'success' => false,
                 'message' => app()->isProduction() ? 'an unknow error occured' : $exception->getMessage(),
+                'message_code' => 'INTERNAL_SERVER_ERROR',
             ];
 
             if(!app()->isProduction()){

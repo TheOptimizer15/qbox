@@ -3,6 +3,7 @@
 namespace App\Services\Auth;
 
 use App\Exceptions\ForbiddenException;
+use App\Exceptions\UnauthorizedException;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
@@ -22,14 +23,19 @@ class AuthService
         $user = $this->userRepository->getByPhoneNumber($phoneNumber);
 
         if (! $user) {
-            throw new ForbiddenException('login failed check your credentials');
+            throw new UnauthorizedException('incoorect credentials');
         }
 
         /**
          * @var User $user
          */
+
+        if(!$user->isActive()){
+            throw new ForbiddenException('you have been blocked and cannot use your account');
+        }
+
         if (! Hash::check($password, $user->password)) {
-            throw new ForbiddenException('login failed check your credentials');
+            throw new UnauthorizedException('incorrect credentials');
         }
 
         $accessToken = $user->createToken('auth', [$user->role], now()->addDay())->plainTextToken;

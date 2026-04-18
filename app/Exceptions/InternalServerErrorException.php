@@ -6,6 +6,6 @@ class InternalServerErrorException extends ApiException
 {
     public function __construct(string $message = "Internal server error.", \Throwable $previous = null)
     {
-        parent::__construct($message, 500, $previous);
+        parent::__construct($message, 500, "INTERNAL_SERVER_ERROR", $previous);
     }
 }

@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['first_name', 'last_name', 'phone_number', 'password', 'role'])]
+#[Fillable(['first_name', 'last_name', 'phone_number', 'password', 'role', 'is_active', 'blocked_reason'])]
 #[Hidden(['password', 'remember_token', 'created_at', 'updated_at'])]
 
 class User extends Authenticatable
@@ -55,5 +55,9 @@ class User extends Authenticatable
 
     public function invitations(){
         return $this->hasMany(Invitation::class, 'invited_by');
+    }
+
+    public function isActive(){
+        return $this->is_active && !$this->blockedblocked_reason;
     }
 }

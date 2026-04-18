@@ -6,6 +6,6 @@ class MethodNotAllowedException extends ApiException
 {
     public function __construct(string $message = "Method not allowed.", \Throwable $previous = null)
     {
-        parent::__construct($message, 405, $previous);
+        parent::__construct($message, 405, "METHOD_NOT_ALLOWED", $previous);
     }
 }
