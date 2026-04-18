@@ -20,14 +20,14 @@ class StoreController extends Controller
         $perPage = (int) $request->query('per_page', 15);
         $search = $request->query('search', '');
         [$stores, $meta] = $this->storeService->getAllStores($user, $perPage);
-        $this->data = [
+        $data = [
             'stores' => $stores,
             'meta' => $meta,
         ];
 
-        $this->message = 'stores loaded successfully';
+        $message = 'stores loaded successfully';
 
-        return $this->response(200);
+        return $this->response(200, $message, $data);
     }
 
     /**
@@ -43,9 +43,9 @@ class StoreController extends Controller
      */
     public function show(string $id)
     {
-        $this->data = $this->storeService->getStore($id);
-        $this->message = 'store found successfully';
-        return $this->response(200);
+        $data = $this->storeService->getStore($id);
+        $message = 'store found successfully';
+        return $this->response(200, $message, $data);
     }
 
     /**
