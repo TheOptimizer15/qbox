@@ -1,7 +1,9 @@
 <?php
 
 use App\Exceptions\ApiException;
+use App\Http\Middleware\AcceptJsonMiddleware;
 use App\Http\Middleware\AuthorizationMiddleware;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'authorize' => AuthorizationMiddleware::class,
         ]);
+        $middleware->prepend([AcceptJsonMiddleware::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (ApiException $exception, Request $request) {
@@ -38,6 +41,16 @@ return Application::configure(basePath: dirname(__DIR__))
             ];
             if($request->is('api/*') || $request->wantsJson()){
                 return response()->json($payload, 422);
+            }
+        });
+
+        $exceptions->render(function(AuthenticationException $exception, Request $request){
+               $payload = [
+                'success' =>  false,
+                'message' => 'unauthenticated',
+            ];
+            if($request->is('api/*') || $request->wantsJson()){
+                return response()->json($payload, 401);
             }
         });
 
