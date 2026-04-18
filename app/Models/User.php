@@ -15,7 +15,6 @@ use Laravel\Sanctum\HasApiTokens;
 #[Fillable(['first_name', 'last_name', 'phone_number', 'password', 'role'])]
 #[Hidden(['password', 'remember_token', 'created_at', 'updated_at'])]
 
-
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -35,15 +34,26 @@ class User extends Authenticatable
     }
 
     protected $appends = [
-        'joined_at'
+        'joined_at',
     ];
 
-    public function getJoinedAtAttribute(){
+    public function getJoinedAtAttribute()
+    {
         return $this->created_at;
     }
 
-    public function stores()
+    public function company()
     {
-        return $this->hasMany(Store::class, 'owner_id');
+        return $this->hasOne(Company::class, 'owner_id');
+    }
+
+    // a user belongs to store if the role is cashier
+    public function store()
+    {
+        return $this->belongsTo(Store::class, 'store_id');
+    }
+
+    public function invitations(){
+        return $this->hasMany(Invitation::class, 'invited_by');
     }
 }

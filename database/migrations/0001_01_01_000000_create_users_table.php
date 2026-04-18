@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('phone_number')->unique();
             $table->string('password');
             $table->enum('role', ['super_admin', 'owner', 'assistant', 'cashier', 'manager'])->default('owner');
+            $table->boolean('is_active');
+            $table->text('blocked_reason')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

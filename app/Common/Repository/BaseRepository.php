@@ -2,23 +2,22 @@
 
 namespace App\Common\Repository;
 
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseRepository
 {
     protected Model $model;
 
-    private function perPage(int $perPage): int
+    public function findAll(int $perPage, array $search = [])
     {
-        return min(100, max(10, $perPage));
-    }
+        $filters =$this->filter($search);
 
-    public function findAll(int $perPage, $column, $search)
-    {
         $paginate = $this->perPage($perPage);
-        $result = $this->model->where($column, "%$search%")->simplePaginate($paginate);
 
-        return $result;
+        $result = $this->model->where($filters)->paginate($paginate);
+
+        return $this->formatPagination($result);
     }
 
     public function findById($id)
@@ -48,7 +47,35 @@ abstract class BaseRepository
         return $model->delete();
     }
 
-    public function query(){
-        return $this->model->getQuery();
+    public function query()
+    {
+        return $this->model->query();
+    }
+
+    protected function perPage(int $perPage): int
+    {
+        return min(100, max(10, $perPage));
+    }
+
+    protected function formatPagination(Paginator $paginatedData)
+    {
+        return [
+            $paginatedData->items(),
+            [
+                'per_page' => $paginatedData->perPage(),
+                'current_page' => $paginatedData->currentPage(),
+                'next_page_url' => $paginatedData->nextPageUrl(),
+                'previous_page_url' => $paginatedData->previousPageUrl(),
+                'has_more_pages' => $paginatedData->hasMorePages(),
+            ],
+        ];
+    }
+
+    private function filter(array $search)
+    {
+        return array_filter($search, function ($value) {
+            return $value !== '' && $value !== null;
+        });
+
     }
 }

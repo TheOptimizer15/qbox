@@ -32,7 +32,7 @@ class AuthService
             throw new ForbiddenException('login failed check your credentials');
         }
 
-        $accessToken = $user->createToken('auth', [$user->role])->plainTextToken;
+        $accessToken = $user->createToken('auth', [$user->role], now()->addDay())->plainTextToken;
 
         return [
             'user' => $user,
@@ -55,7 +55,7 @@ class AuthService
          */
         return [
             'user' => $user,
-            'access_token' => $user->createToken('auth', ["$user->role"])->plainTextToken,
+            'access_token' => $user->createToken('auth', ["$user->role"], now()->addDay())->plainTextToken,
         ];
     }
 
