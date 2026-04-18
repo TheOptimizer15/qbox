@@ -29,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'success' => false,
                     'message' => $exception->getMessage(),
+                    'message_code' => $exception->getMessageCode(),
                 ], $exception->getStatusCode());
             }
         });
@@ -37,6 +38,7 @@ return Application::configure(basePath: dirname(__DIR__))
             $payload = [
                 'success' =>  false,
                 'message' => 'the data submitted does not match the required form',
+                'message_code' => 'VALIDATION_ERROR',
                 'errors' =>$exception->errors()
             ];
             if($request->is('api/*') || $request->wantsJson()){
@@ -48,6 +50,7 @@ return Application::configure(basePath: dirname(__DIR__))
                $payload = [
                 'success' =>  false,
                 'message' => 'unauthenticated',
+                'message_code' => 'UNAUTHENTICATED_ACCESS',
             ];
             if($request->is('api/*') || $request->wantsJson()){
                 return response()->json($payload, 401);
@@ -58,6 +61,7 @@ return Application::configure(basePath: dirname(__DIR__))
             $payload = [
                 'success' => false,
                 'message' => app()->isProduction() ? 'an unknow error occured' : $exception->getMessage(),
+                'message_code' => 'INTERNAL_SERVER_ERROR',
             ];
 
             if(!app()->isProduction()){

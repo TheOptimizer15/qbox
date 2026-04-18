@@ -6,6 +6,6 @@ class UnauthorizedException extends ApiException
 {
     public function __construct(string $message = "Unauthorized access.", \Throwable $previous = null)
     {
-        parent::__construct($message, 401, $previous);
+        parent::__construct($message, 401, "UNAUTHORIZED", $previous);
     }
 }
