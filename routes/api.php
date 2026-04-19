@@ -22,7 +22,7 @@ Route::prefix('v1')->group(function () {
         Route::patch('company/{id}', [CompanyController::class, 'update'])->middleware('authorize:owner');
         Route::delete('company/{id}', [CompanyController::class, 'delete'])->middleware('authorize:super_admin');
         
-        Route::apiResource('stores', StoreController::class);
+        Route::apiResource('stores', StoreController::class)->middleware('authorize:owner,cashier');
 
     });
 });

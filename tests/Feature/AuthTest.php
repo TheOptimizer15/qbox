@@ -30,7 +30,7 @@ class AuthTest extends TestCase
 
         $response = $this->postJson($this->endpoint, $payload);
         $response->assertStatus(200);
-
+        // $response->dump();
     }
 
     public function test_should_fail_login_if_phone_number_does_not_exists(): void
@@ -47,6 +47,7 @@ class AuthTest extends TestCase
 
         $response = $this->postJson($this->endpoint, $payload);
         $response->assertStatus(422)->assertJsonValidationErrorFor('phone_number');
+        // $response->dump();
     }
 
     public function test_should_reject_user_if_wrong_password(): void
@@ -64,6 +65,7 @@ class AuthTest extends TestCase
         $response = $this->postJson($this->endpoint, $payload);
 
         $response->assertStatus(401);
+        // $response->dump();
     }
 
     public function test_should_fail_login_when_user_is_blocked(): void
@@ -83,5 +85,6 @@ class AuthTest extends TestCase
         $response = $this->postJson($this->endpoint, $payload);
 
         $response->assertStatus(403);
+        // $response->dump();
     }
 }

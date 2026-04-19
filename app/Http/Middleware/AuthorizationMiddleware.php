@@ -19,11 +19,11 @@ class AuthorizationMiddleware
     {
         $user = $request->user();
 
-        if(!$user){
+        if (! $user) {
             throw new UnauthorizedException('authentication required');
         }
-     
-        if(!in_array($user->role, $role)){
+
+        if (! in_array($user->role->value, $role)) {
             throw new ForbiddenException('you are not allowed to access this ressource');
         }
 

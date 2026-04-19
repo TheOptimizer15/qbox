@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Requests\Company;
+namespace App\Http\Requests\Store;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateCompanyRequest extends FormRequest
+class UpdateStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user() && $this->user()->role->value === 'owner';
+        return $this->user() && $this->user()->role->value == 'owner';
     }
 
     /**
@@ -23,7 +23,11 @@ class UpdateCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['string', 'min:3', 'required'],
+            'name' => ['required', 'string', 'min:3', 'max:50'],
+            'location' => ['sometimes', 'string'],
+            'longitude' => ['sometimes', 'numeric'],
+            'latitude' => ['sometimes', 'numeric'],
+            'online' => ['sometimes', 'boolean'],
         ];
     }
 }

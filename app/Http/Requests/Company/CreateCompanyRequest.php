@@ -13,7 +13,7 @@ class CreateCompanyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-       return $this->user() && $this->user()->role === 'owner';
+       return $this->user() && $this->user()->role->value === 'owner';
     }
 
     /**

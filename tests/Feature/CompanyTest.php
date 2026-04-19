@@ -30,6 +30,7 @@ class CompanyTest extends TestCase
 
         $response = $this->postJson($url, $payload);
         $response->assertStatus(201);
+        // $response->dump();
     }
 
     public function test_should_fail_company_creation_when_user_is_not_owner()
@@ -48,6 +49,7 @@ class CompanyTest extends TestCase
 
         $response = $this->postJson($url, $payload);
         $response->assertStatus(403);
+        // $response->dump();
     }
 
     public function test_delete_company_only_for_admin(): void
@@ -62,6 +64,7 @@ class CompanyTest extends TestCase
         $url = "{$this->baseUrl}company/{$company->id}";
         $response = $this->delete($url);
         $response->assertStatus(200);
+        // $response->dump();
     }
 
     public function test_should_fail_deletion_when_user_not_admin(): void
@@ -76,6 +79,7 @@ class CompanyTest extends TestCase
         $url = "{$this->baseUrl}company/{$company->id}";
         $response = $this->delete($url);
         $response->assertStatus(403);
+        // $response->dump();
     }
 
     public function test_should_sucessfully_update_company_name(): void
@@ -91,8 +95,8 @@ class CompanyTest extends TestCase
         ];
 
         $response = $this->patchJson($url, $payload);
-        $response->dump();
         $response->assertStatus(200);
+        // $response->dump();
     }
 
     public function test_should_fail_update_company_name_when_user_do_not_own_the_company(): void
@@ -110,8 +114,8 @@ class CompanyTest extends TestCase
         ];
 
         $response = $this->patchJson($url, $payload);
-        $response->dump();
         $response->assertStatus(400);
+        // $response->dump();
     }
 
     public function test_should_fail_update_company_name_when_user_is_not_an_owner(): void
@@ -127,7 +131,7 @@ class CompanyTest extends TestCase
         ];
 
         $response = $this->patchJson($url, $payload);
-        $response->dump();
         $response->assertStatus(403);
+        // $response->dump();
     }
 }

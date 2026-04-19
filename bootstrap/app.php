@@ -3,6 +3,7 @@
 use App\Exceptions\ApiException;
 use App\Http\Middleware\AcceptJsonMiddleware;
 use App\Http\Middleware\AuthorizationMiddleware;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -34,26 +35,37 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        $exceptions->render(function(ValidationException $exception, Request $request){
+        $exceptions->render(function (ValidationException $exception, Request $request) {
             $payload = [
-                'success' =>  false,
+                'success' => false,
                 'message' => 'the data submitted does not match the required form',
                 'message_code' => 'VALIDATION_ERROR',
-                'errors' =>$exception->errors()
+                'errors' => $exception->errors(),
             ];
-            if($request->is('api/*') || $request->wantsJson()){
+            if ($request->is('api/*') || $request->wantsJson()) {
                 return response()->json($payload, 422);
             }
         });
 
-        $exceptions->render(function(AuthenticationException $exception, Request $request){
-               $payload = [
-                'success' =>  false,
+        $exceptions->render(function (AuthenticationException $exception, Request $request) {
+            $payload = [
+                'success' => false,
                 'message' => 'unauthenticated',
                 'message_code' => 'UNAUTHENTICATED_ACCESS',
             ];
-            if($request->is('api/*') || $request->wantsJson()){
+            if ($request->is('api/*') || $request->wantsJson()) {
                 return response()->json($payload, 401);
+            }
+        });
+
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $exception, Request $request) {
+             $payload = [
+                'success' => false,
+                'message' => 'this action is unauthorized',
+                'message_code' => 'FORBIDDEN',
+            ];
+            if ($request->is('api/*') || $request->wantsJson()) {
+                return response()->json($payload, 403);
             }
         });
 
@@ -64,7 +76,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 'message_code' => 'INTERNAL_SERVER_ERROR',
             ];
 
-            if(!app()->isProduction()){
+            if (! app()->isProduction()) {
                 $payload['trace'] = $exception->getTrace();
             }
 
