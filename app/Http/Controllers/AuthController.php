@@ -14,29 +14,29 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $data = $request->validated();
-        $this->message = 'logged in successfully';
-        $this->data = $this->authService->login($data['phone_number'], $data['password']);
+        $message = 'logged in successfully';
+        $responseData = $this->authService->login($data['phone_number'], $data['password']);
 
-       return $this->response(200);
+       return $this->response(200, $message, $responseData);
     }
 
     public function signup(SignupRequest $request){
         $data = $request->validated();
-        $this->message = 'account created successfully';
-        $this->data = $this->authService->register(
+        $message = 'account created successfully';
+        $responseData = $this->authService->register(
             $data['first_name'],
             $data['last_name'],
             $data['phone_number'],
             $data['password'],
         );
 
-        return $this->response(200);
+        return $this->response(200, $message, $responseData);
     }
 
     public function logout(Request $request){
         $user = $request->user();
         $this->authService->logout($user);
         
-        return $this->response();
+        return $this->response(204, 'logged out successfully');
     }
 }

@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserIsActive
+class ActiveUserMiddleware
 {
     /**
      * Handle an incoming request.
@@ -20,7 +20,7 @@ class UserIsActive
         $user = $request->user();
 
         if(!$user){
-            throw new UnauthorizedException('you need to be authenticated');
+            throw new UnauthorizedException();
         }
 
         if($user->isActive()){
