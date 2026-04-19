@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class StoreFactory extends Factory
 {
-    public function __construct(protected UserFactory $userFactory) {
-    }
+    public function __construct() {}
+
     /**
      * Define the model's default state.
      *
@@ -19,10 +19,9 @@ class StoreFactory extends Factory
      */
     public function definition(): array
     {
-        $user = $this->userFactory->create(['role' => 'owner']);
         return [
             'name' => fake()->name(),
-            'owner_id' => $user->id
+
         ];
     }
 }

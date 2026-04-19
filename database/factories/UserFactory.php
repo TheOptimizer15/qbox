@@ -12,8 +12,6 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
-
-   
     /**
      * Define the model's default state.
      *
@@ -42,6 +40,17 @@ class UserFactory extends Factory
         ]);
     }
 
+    public function cashier(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'cashier',
+        ]);
+    }
 
-    
+    public function owner(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'owner',
+        ]);
+    }
 }
