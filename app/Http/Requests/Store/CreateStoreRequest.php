@@ -1,16 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Company;
+namespace App\Http\Requests\Store;
 
 use App\Enums\UserRole;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateCompanyRequest extends FormRequest
+class CreateStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
        return true;
@@ -24,7 +21,11 @@ class CreateCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['string', 'min:3', 'required']
+            'name' => ['required', 'string', 'min:3', 'max:50'],
+            'location' => ['nullable', 'string'],
+            'longitude' => ['nullable', 'numeric'],
+            'latitude' => ['nullable', 'numeric'],
+            'online' => ['required', 'boolean'],
         ];
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\UserRole;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('phone_number')->unique();
             $table->string('password');
-            $table->enum('role', ['super_admin', 'owner', 'assistant', 'cashier', 'manager'])->default('owner');
+            $table->string('role')->default(UserRole::OWNER->value);
             $table->boolean('is_active');
             $table->text('blocked_reason')->nullable();
             $table->rememberToken();

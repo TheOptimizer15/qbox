@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -12,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['first_name', 'last_name', 'phone_number', 'password', 'role', 'is_active', 'blocked_reason'])]
+#[Fillable(['first_name', 'last_name', 'phone_number', 'password', 'role', 'is_active', 'blocked_reason', 'store_id'])]
 #[Hidden(['password', 'remember_token', 'created_at', 'updated_at'])]
 
 class User extends Authenticatable
@@ -30,6 +31,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRole::class
         ];
     }
 
@@ -58,6 +60,6 @@ class User extends Authenticatable
     }
 
     public function isActive(){
-        return $this->is_active && !$this->blockedblocked_reason;
+        return $this->is_active && !$this->blocked_reason;
     }
 }

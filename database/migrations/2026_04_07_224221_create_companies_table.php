@@ -17,11 +17,6 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
-
-        // add a foreign key to the store so it belongs to a company
-        Schema::table('stores', function (Blueprint $table) {
-            $table->foreignUuid('company_id')->constrained('companies', 'id')->cascadeOnDelete();
-        });
     }
 
     /**
@@ -29,10 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('stores', function (Blueprint $table) {
-            $table->dropForeign('company_id');
-            $table->dropColumn('company_id');
-        });
         Schema::dropIfExists('companies');
     }
 };

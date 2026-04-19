@@ -23,7 +23,7 @@ class ActiveUserMiddleware
             throw new UnauthorizedException();
         }
 
-        if($user->isActive()){
+        if(!$user->isActive()){
             throw new ForbiddenException('your account is inactive');
         }
 

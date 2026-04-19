@@ -21,7 +21,7 @@ class CompanyController extends Controller
         return $this->response(200, $message, $data);
     }
 
-    public function create(CreateCompanyRequest $request)
+    public function store(CreateCompanyRequest $request)
     {
         $user = $request->user();
         $data = $request->validated();
@@ -38,7 +38,7 @@ class CompanyController extends Controller
         return $this->response(200, 'company name update', $response);
     }
 
-    public function delete($id){
+    public function destroy($id){
        $this->companyService->deleteCompany($id);
         return $this->response(200, 'company deleted');
     }

@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Company;
 use App\Models\Store;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,8 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class StoreFactory extends Factory
 {
-    public function __construct(protected UserFactory $userFactory) {
-    }
+
     /**
      * Define the model's default state.
      *
@@ -19,10 +20,13 @@ class StoreFactory extends Factory
      */
     public function definition(): array
     {
-        $user = $this->userFactory->create(['role' => 'owner']);
         return [
-            'name' => fake()->name(),
-            'owner_id' => $user->id
+            'name' => fake()->firstName(),
+            'location' => fake()->city(),
+            'longitude' => fake()->longitude(),
+            'latitude' => fake()->latitude(),
+            'online' => fake()->boolean(),
+            'company_id' => Company::factory(),
         ];
     }
 }

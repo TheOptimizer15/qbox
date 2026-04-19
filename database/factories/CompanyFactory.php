@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,9 +21,9 @@ class CompanyFactory extends Factory
     {
         return [
             'name' => fake()->name('male'),
-            'owner_id' => User::factory()->create([
-                'role' => 'owner'
-            ])->id,
+            'owner_id' => User::factory()->state([
+                'role' => UserRole::OWNER
+            ]),
         ];
     }
 }

@@ -30,13 +30,13 @@ class AuthController extends Controller
             $data['password'],
         );
 
-        return $this->response(200, $message, $responseData);
+        return $this->response(201, $message, $responseData);
     }
 
     public function logout(Request $request){
         $user = $request->user();
         $this->authService->logout($user);
         
-        return $this->response(204, 'logged out successfully');
+        return $this->response(200, 'logged out successfully');
     }
 }
