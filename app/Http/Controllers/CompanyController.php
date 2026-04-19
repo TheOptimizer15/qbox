@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Company\CreateCompanyRequest;
+use App\Http\Requests\Company\UpdateCompanyRequest;
 use App\Services\Company\CompanyService;
 use Illuminate\Http\Request;
 
@@ -24,9 +25,21 @@ class CompanyController extends Controller
     {
         $user = $request->user();
         $data = $request->validated();
-        $data = $this->companyService->createCompany($user, $data);
+        $response = $this->companyService->createCompany($user, $data);
         $message = 'company created successfully';
 
-        return $this->response(200, $message, $data);
+        return $this->response(201, $message, $response);
+    }
+
+    public function update(UpdateCompanyRequest $request){
+        $user = $request->user();
+        $data = $request->validated();
+        $response = $this->companyService->updateName($user, $data['name']);
+        return $this->response(200, 'company name update', $response);
+    }
+
+    public function delete($id){
+       $this->companyService->deleteCompany($id);
+        return $this->response(200, 'company deleted');
     }
 }

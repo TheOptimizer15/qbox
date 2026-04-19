@@ -4,6 +4,7 @@ namespace App\Http\Requests\Company;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateCompanyRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class CreateCompanyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+       return $this->user() && $this->user()->role === 'owner';
     }
 
     /**
@@ -23,7 +24,7 @@ class CreateCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['string', 'min:3', 'required']
         ];
     }
 }

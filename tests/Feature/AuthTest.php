@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class LoginTest extends TestCase
+class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -33,7 +33,7 @@ class LoginTest extends TestCase
 
     }
 
-    public function test_reject_user_if_phone_number_is_invalid(): void
+    public function test_should_fail_login_if_phone_number_does_not_exists(): void
     {
         User::factory()->create([
             'role' => 'owner',
@@ -49,7 +49,7 @@ class LoginTest extends TestCase
         $response->assertStatus(422)->assertJsonValidationErrorFor('phone_number');
     }
 
-    public function test_user_reject_user_if_wrong_password(): void
+    public function test_should_reject_user_if_wrong_password(): void
     {
         User::factory()->create([
             'role' => 'owner',
@@ -66,7 +66,7 @@ class LoginTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_user_is_blocked(): void
+    public function test_should_fail_login_when_user_is_blocked(): void
     {
         User::factory()->create([
             'role' => 'owner',

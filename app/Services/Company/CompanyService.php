@@ -2,6 +2,7 @@
 
 namespace App\Services\Company;
 
+use App\Exceptions\BadRequestException;
 use App\Exceptions\NotFoundException;
 use App\Models\User;
 use App\Repositories\CompanyRepository;
@@ -19,6 +20,10 @@ class CompanyService
 
     public function createCompany(User $user, array $data)
     {
+        if ($user->company()->exists()) {
+            throw new BadRequestException('you already have a company');
+        }
+
         $companyData = [...$data, ...[
             'owner_id' => $user->id,
         ]];
@@ -30,14 +35,13 @@ class CompanyService
 
     public function updateName(
         User $user,
-        $name
+        string $name
     ) {
-        $companyId = $user->company?->id;
-        $company = $this->repository->findById($companyId);
 
-        if (! $company) {
-            throw new NotFoundException('company not found');
+        if (! $user->company()->exists()) {
+            throw new BadRequestException('you do not have a company');
         }
+        $company = $user->company;
 
         $updatedCompany = $this->repository->update($company, [
             'name' => $name,
@@ -48,8 +52,8 @@ class CompanyService
 
     /**
      * only the super admin can delete a company and all of its data
-    */
-    public function deleteCompany($companyId)
+     */
+    public function deleteCompany(string $companyId)
     {
         $company = $this->repository->findById($companyId);
 
