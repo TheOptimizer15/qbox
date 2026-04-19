@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
-#[Fillable(['store_id', 'inivation_id', 'expires_at', 'name'])]
-#[Hidden(['inivation_id'])]
+#[Fillable(['store_id', 'invitation_id', 'expires_at', 'name'])]
+#[Hidden(['invitation_id'])]
 class Invitation extends Model
 {
     use HasUuids;

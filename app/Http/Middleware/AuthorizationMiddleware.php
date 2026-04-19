@@ -24,7 +24,7 @@ class AuthorizationMiddleware
         }
 
         if (! in_array($user->role->value, $role)) {
-            throw new ForbiddenException('you are not allowed to access this ressource');
+            throw new ForbiddenException('you are not allowed to access this resource');
         }
 
         return $next($request);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Store;
 
+use App\Enums\UserRole;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -9,7 +10,7 @@ class CreateStoreRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user() && $this->user()->role->value == 'owner';
+       return true;
     }
 
     /**

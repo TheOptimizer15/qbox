@@ -42,7 +42,7 @@ class StoreController extends Controller
         $user = $request->user();
         $response = $this->storeService->createStore($user, $data);
 
-        return $this->response(201, 'store created sucessfully', $response);
+        return $this->response(201, 'store created successfully', $response);
     }
 
     /**
@@ -77,6 +77,6 @@ class StoreController extends Controller
         $user = $request->user();
         $this->storeService->deleteStore($user, $id);
 
-        return $this->response(200, 'stored deleted');
+        return $this->response(200, 'store deleted');
     }
 }

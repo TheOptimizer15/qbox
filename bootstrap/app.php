@@ -72,7 +72,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (Throwable $exception, Request $request) {
             $payload = [
                 'success' => false,
-                'message' => app()->isProduction() ? 'an unknow error occured' : $exception->getMessage(),
+                'message' => app()->isProduction() ? 'an unknown error occurred' : $exception->getMessage(),
                 'message_code' => 'INTERNAL_SERVER_ERROR',
             ];
 

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\Company;
 use App\Models\Store;
 use App\Models\User;
@@ -27,7 +28,7 @@ class UserFactory extends Factory
             'phone_number' => fake()->unique()->phoneNumber(),
             'role' => 'super_admin',
             'is_active' => true,
-            'password' => Hash::make('password'),
+            'password' => 'password',
             'remember_token' => Str::random(10),
         ];
     }
@@ -45,15 +46,15 @@ class UserFactory extends Factory
     public function cashier(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => 'cashier',
-            'store_id' => Store::factory()->create()->id,
+            'role' => UserRole::CASHIER,
+            'store_id' => Store::factory(),
         ]);
     }
 
     public function owner(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => 'owner'
+            'role' => UserRole::OWNER
         ]);
     }
 }

@@ -36,7 +36,7 @@ class Store extends Model
         return $this->belongsTo(Company::class, 'company_id');
     }
 
-    public function inviations(){
+    public function invitations(){
         return $this->hasMany(Invitation::class, 'store_id');
     }
 }

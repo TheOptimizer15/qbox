@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Company;
 
+use App\Enums\UserRole;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -10,9 +11,9 @@ class UpdateCompanyRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+   public function authorize(): bool
     {
-        return $this->user() && $this->user()->role->value === 'owner';
+       return true;
     }
 
     /**

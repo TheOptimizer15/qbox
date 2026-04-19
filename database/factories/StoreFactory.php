@@ -26,7 +26,7 @@ class StoreFactory extends Factory
             'longitude' => fake()->longitude(),
             'latitude' => fake()->latitude(),
             'online' => fake()->boolean(),
-            'company_id' => Company::factory()->create(),
+            'company_id' => Company::factory(),
         ];
     }
 }

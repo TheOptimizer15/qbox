@@ -60,6 +60,6 @@ class User extends Authenticatable
     }
 
     public function isActive(){
-        return $this->is_active && !$this->blockedblocked_reason;
+        return $this->is_active && !$this->blocked_reason;
     }
 }

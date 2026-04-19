@@ -12,7 +12,7 @@ class UpdateStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user() && $this->user()->role->value == 'owner';
+        return true;
     }
 
     /**
