@@ -3,27 +3,34 @@
 namespace Tests\Feature;
 
 use App\Enums\UserRole;
-use App\Models\Invitation;
 use App\Models\Store;
 use App\Models\User;
+use App\Models\Invitation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-class InvitationTest extends TestCase
+class InvitationOwnerTest extends TestCase
 {
     use RefreshDatabase;
 
-    private string $invitationsUrl;
+    /**
+     * @var string
+     */
+    protected string $invitationsUrl;
 
+    /**
+     * Set up the test environment.
+     */
     protected function setUp(): void
     {
         parent::setUp();
         $this->invitationsUrl = "{$this->baseUrl}invitations";
     }
 
-  
-
+    /**
+     * Test that a company owner can successfully create an invitation for their store.
+     */
     public function test_should_create_invitation()
     {
         $store = Store::factory()->create();
@@ -42,6 +49,9 @@ class InvitationTest extends TestCase
         $response->assertStatus(201);
     }
 
+    /**
+     * Test that an invitation fails if the owner doesn't own the specified store.
+     */
     public function test_should_fail_create_invitation_when_user_not_the_owner_of_the_store()
     {
         $store = Store::factory()->create();
@@ -60,6 +70,9 @@ class InvitationTest extends TestCase
         $response->assertStatus(403);
     }
 
+    /**
+     * Test that an invitation fails if the user is not an OWNER.
+     */
     public function test_should_fail_create_invitation_when_user_not_an_owner()
     {
         $store = Store::factory()->create();
@@ -78,6 +91,9 @@ class InvitationTest extends TestCase
         $response->assertStatus(403);
     }
 
+    /**
+     * Test that an invitation fails if an invalid role (e.g. SUPER_ADMIN) is requested for the invitee.
+     */
     public function test_should_fail_create_invitation_if_role_not_allowed()
     {
         $store = Store::factory()->create();
@@ -96,50 +112,9 @@ class InvitationTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_should_create_tenant_when_user_accepts_invitation()
-    {
-        $invitation = Invitation::factory()->create();
-
-        $url = "{$this->invitationsUrl}/{$invitation->invitation_id}/accept";
-        $payload = [
-            'phone_number' => '0103284835',
-            'password' => 'Thismystrongpassword',
-            'password_confirmation' => 'Thismystrongpassword',
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-        ];
-
-        $response = $this->putJson($url, $payload);
-        $response->assertStatus(201);
-    }
-
-    public function test_should_fail_create_tenant_for_expired_invitation()
-    {
-        $invitation = Invitation::factory()->expired()->create();
-
-        $url = "{$this->invitationsUrl}/{$invitation->invitation_id}/accept";
-        $payload = [
-            'phone_number' => '0103284835',
-            'password' => 'Thismystrongpassword',
-            'password_confirmation' => 'Thismystrongpassword',
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-        ];
-
-        $response = $this->putJson($url, $payload);
-        $response->assertStatus(404);
-    }
-
-
-    public function test_should_deny_invitation()
-    {
-        $invitation = Invitation::factory()->create();
-
-        $url = "{$this->invitationsUrl}/{$invitation->invitation_id}/deny";
-        $response = $this->putJson($url);
-        $response->assertStatus(200);
-    }
-
+    /**
+     * Test that an owner can successfully cancel an invitation they created.
+     */
     public function test_should_cancel_invitation()
     {
         $invitation = Invitation::factory()->create();
@@ -151,6 +126,9 @@ class InvitationTest extends TestCase
         $response->assertStatus(200);
     }
 
+    /**
+     * Test that cancelling an invitation fails if the user is not the one who created it.
+     */
     public function test_should_fail_cancel_invitation_if_not_the_owner()
     {
         $invitation = Invitation::factory()->create();

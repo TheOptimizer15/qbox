@@ -45,6 +45,7 @@ class InvitationRepository extends BaseRepository
     {
         return $this->query()->where('invitation_id', $invitationId)
             ->where('status', InvitationStatus::PENDING)
-            ->whereNowOrFuture('expires_at')->first();
+            ->where('expires_at', '>', now())
+            ->first();
     }
 }
