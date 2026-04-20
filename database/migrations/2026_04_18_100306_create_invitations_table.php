@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('store_id')->constrained('stores', 'id')->cascadeOnDelete();
-            $table->foreignUuid('invited_by')->constrained('users', 'id')->cascadeOnDelete();
             $table->string('name')->nullable();
             $table->string('invitation_id')->unique();
             $table->dateTime('expires_at');

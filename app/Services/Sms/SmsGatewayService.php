@@ -4,7 +4,7 @@ namespace App\Services\Sms;
 
 use Illuminate\Support\Facades\Http;
 
-class SmsGatewayService implements SmsProviderInterface
+class SmsGatewayService implements SmsService
 {
     /**
      * Create a new class instance.

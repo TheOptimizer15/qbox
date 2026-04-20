@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\StoreController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,8 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('stores', StoreController::class)
             ->only(['store', 'update', 'destroy'])
             ->middleware('authorize:owner');
+
+        Route::post('invite', [InvitationController::class, 'invite'])->middleware('authorize:owner');
 
     });
 });
