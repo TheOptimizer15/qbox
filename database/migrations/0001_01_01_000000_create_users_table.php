@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('phone_number')->unique();
             $table->string('password');
             $table->string('role')->default(UserRole::OWNER->value);
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
             $table->text('blocked_reason')->nullable();
             $table->rememberToken();
             $table->timestamps();

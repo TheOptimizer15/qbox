@@ -3,14 +3,14 @@
 namespace App\Repositories;
 
 use App\Common\Repository\BaseRepository;
-use App\Enums\TenantRole;
+use App\Enums\InvitationStatus;
+use App\Enums\UserRole;
 use App\Models\Invitation;
 use App\Models\User;
 
 /**
  * @extends BaseRepository<Invitation>
  */
-
 class InvitationRepository extends BaseRepository
 {
     /**
@@ -18,12 +18,12 @@ class InvitationRepository extends BaseRepository
      */
     public function __construct(
         Invitation $invitation
-    )
-    {   
+    ) {
         $this->model = $invitation;
     }
 
-    public function createInvitation(string $storeId, $name, TenantRole $role, string $email, string $phoneNumber, User $invitedBy){
+    public function createInvitation(string $storeId, $name, UserRole $role, string $email, string $phoneNumber, User $invitedBy)
+    {
         $invitation = $this->model->newInstance();
 
         $invitation->store_id = $storeId;
@@ -34,8 +34,17 @@ class InvitationRepository extends BaseRepository
         $invitation->phone_number = $phoneNumber;
         $invitation->expires_at = now()->addHours(5);
         $invitation->invited_by = $invitedBy->id;
+        $invitation->status = InvitationStatus::PENDING;
 
         $invitation->save();
+
         return $invitation;
+    }
+
+    public function getInvitation($invitationId)
+    {
+        return $this->query()->where('invitation_id', $invitationId)
+            ->where('status', InvitationStatus::PENDING)
+            ->whereNowOrFuture('expires_at')->first();
     }
 }

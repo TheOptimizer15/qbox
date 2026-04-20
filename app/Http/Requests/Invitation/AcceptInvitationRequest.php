@@ -23,7 +23,10 @@ class AcceptInvitationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            
+            'phone_number' => ['min:10', 'max:10', 'unique:users,phone_number', 'required'],
+            'password' => ['min:8', 'required', 'confirmed'],
+            'first_name' => ['min:2', 'max:50', 'required'],
+            'last_name' => ['min:2', 'max:50', 'required']
         ];
     }
 }

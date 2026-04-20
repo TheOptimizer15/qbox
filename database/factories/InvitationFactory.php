@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\InvitationStatus;
+use App\Enums\UserRole;
 use App\Models\Invitation;
 use App\Models\Store;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -27,10 +29,14 @@ class InvitationFactory extends Factory
 
         return [
             'store_id' => $store->id,
-            'invited_by' => $store->company->owner_id,
-            'invitation_id' => Str::uuid()->toString(),
-            'expires_at' => now()->addMinutes(5),
             'name' => fake()->name(),
+            'invitation_id' => Str::random(50),
+            'expires_at' => now()->addMinutes(5),
+            'role' => UserRole::CASHIER,
+            'email' => fake()->email(),
+            'phone_number' => '0556203925',
+            'invited_by' => $store->company->owner_id,
+            'status' => InvitationStatus::PENDING
         ];
     }
 

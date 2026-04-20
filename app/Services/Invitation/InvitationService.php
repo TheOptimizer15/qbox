@@ -2,13 +2,16 @@
 
 namespace App\Services\Invitation;
 
-use App\Enums\TenantRole;
+use App\Enums\UserRole;
 use App\Events\InvitationCreatedEvent;
 use App\Exceptions\ForbiddenException;
 use App\Exceptions\NotFoundException;
+use App\Models\Invitation;
+use App\Models\Store;
 use App\Models\User;
 use App\Repositories\InvitationRepository;
 use App\Repositories\StoreRepository;
+use App\Repositories\UserRepository;
 
 /**
  * Handles invitation for stores
@@ -18,7 +21,8 @@ class InvitationService
 {
     public function __construct(
         protected InvitationRepository $invitationRepository,
-        protected StoreRepository $storeRepository
+        protected StoreRepository $storeRepository,
+        protected UserRepository $userRepository
     ) {}
 
     /**
@@ -28,11 +32,13 @@ class InvitationService
      * @param array{
      * name?: string,
      * store_id: string,
-     * role: TenantRole,
+     * role: UserRole,
      * email: string,
      * phone_number: string,
      * invited_by: User
      * } $data
+     * 
+     * @return Invitation
      */
     public function invite(array $data)
     {
@@ -62,19 +68,85 @@ class InvitationService
 
         InvitationCreatedEvent::dispatch($invitationEventData);
 
-        return $invitation;
+        return $invitation->load(['store']);
     }
 
-    public function accept() {}
+    /**
+     * Accept invitation from the user being invited
+     * @param array {
+     * phone_number: string,
+     * passowrd: string,
+     * first_name: string,
+     * last_name: string,
+     * invitation_id: string
+     * } $invitationData
+     * @return array {
+     * User,
+     * Invitation
+     * }
+     */ 
+    public function accept(array $invitationData) {
+        $invitation = $this->invitationRepository->getInvitation($invitationData['invitation_id']);
 
-    public function deny() {}
+        if(!$invitation) throw new NotFoundException('invitation invalid, expired, or not found');
 
-    public function cancel() {}
+        unset($invitationData['invitation_id']);
+
+        $userData = [
+            'first_name' => $invitationData['first_name'],
+            'last_name' => $invitationData['last_name'],
+            'phone_number' => $invitationData['phone_number'],
+            'password' => $invitationData['password'],
+            'role' => $invitation->role,
+            'store_id' => $invitation->store_id,
+            'is_active' => true
+        ];
+
+        $user = $this->createTenant($userData);
+
+        $invitation->accept();
+        
+        return [
+            $user,
+            $invitation->refresh()
+        ];
+    }
+
+    /**
+     * Deny invitation 
+     * @param string $invitationId
+    */
+    public function deny(string $invitationId) {
+         $invitation = $this->invitationRepository->getInvitation($invitationId);
+
+        if(!$invitation) throw new NotFoundException('invitation invalid, expired, or not found');
+
+        $invitation->deny();
+        
+        return $invitation->refresh();
+    }
+
+    /**
+     * Cancel the invitation by deleting from the db
+     * @param User $user
+     * @param string  $invitationId
+     * @return boolean
+    */
+    public function cancel(User $user, string $invitationId) {
+        $invitation = $this->invitationRepository->findById($invitationId);
+
+        if(!$invitation) throw new NotFoundException('invitation invalid, expired, or not found');
+
+        $this->isInvitationOwner($user, $invitation);
+        $this->invitationRepository->delete($invitation);
+        return true;
+
+    }
 
     /**
      * Asserts user is the owner of the company to which the store belongs
      * @param User  $user
-     * @param string  
+     * @param string $storeId  
      * @return void
      * @throws ForbiddenException
      * @throws NotFoundException
@@ -89,6 +161,35 @@ class InvitationService
 
         if($owner->id !== $user->id){
             throw new ForbiddenException('you cannot create an invitation for a store you do not own');
+        }
+    }
+
+    /**
+     * Uses the user repository to create tenant from the invitaion
+     * @param array{
+     * first_name: string,
+     * last_name: string,
+     * phone_number: string,
+     * password: string,
+     * role: UserRole
+     * } $userData
+     * @return User
+    */
+    private function createTenant(array $userData){
+       return $this->userRepository->create($userData);
+    }
+
+    /**
+     * Asserts the invitation belongs to a owner
+     * @param User $user
+     * @param Invitation $invitation
+     * @throws ForbiddenException
+     * @return void
+    */
+
+    private function isInvitationOwner(User $user, Invitation $invitation){
+        if($invitation->invitedBy->id !== $user->id){
+            throw new ForbiddenException('cannot edit or delete this invitation');
         }
     }
 }

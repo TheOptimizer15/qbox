@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\TenantRole;
+use App\Enums\InvitationStatus;
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -22,7 +23,8 @@ class Invitation extends Model
     protected function casts(): array
     {
         return [
-            'role' => TenantRole::class,
+            'role' => UserRole::class,
+            'status' => InvitationStatus::class
         ];
     }
 
@@ -40,12 +42,31 @@ class Invitation extends Model
         return $this->belongsTo(Store::class, 'store_id');
     }
 
-    public function invitedBy(){
+    public function invitedBy()
+    {
         return $this->belongsTo(User::class, 'invited_by');
     }
 
     public function isExpired()
     {
         return Carbon::parse($this->expires_at)->isNowOrPast();
+    }
+
+    public function accept()
+    {
+        $this->status = InvitationStatus::ACCEPTED;
+        $this->save();
+    }
+
+    public function deny()
+    {
+        $this->status = InvitationStatus::DENIED;
+        $this->save();
+    }
+
+    public function cancel()
+    {
+        $this->status = InvitationStatus::CANCELLED;
+        $this->save();
     }
 }
