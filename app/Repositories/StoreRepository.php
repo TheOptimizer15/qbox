@@ -6,12 +6,13 @@ use App\Common\Repository\BaseRepository;
 use App\Models\Store;
 use App\Models\User;
 
+/**
+ * @extends BaseRepository<Store>
+ */
+
 class StoreRepository extends BaseRepository
 {
-    /**
-     * @extends parent<BaseRepository>
-     * 
-     */
+    
     public function __construct(Store $store)
     {
         $this->model = $store;

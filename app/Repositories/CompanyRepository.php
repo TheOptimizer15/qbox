@@ -6,6 +6,10 @@ use App\Common\Repository\BaseRepository;
 use App\Models\Company;
 use App\Models\User;
 
+/**
+ * @extends BaseRepository<Company>
+ */
+
 class CompanyRepository extends BaseRepository
 {
     /**
