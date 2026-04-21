@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\SMS;
+namespace App\Services\Sms;
 
 interface SmsService
 {
