@@ -16,21 +16,26 @@ class SmsGateService implements SmsService
 
     public function send($phoneNumber, $message)
     {
-        $phone = $this->formatNumber($phoneNumber);
-        $username = config('smsgate.username');
-        $password = config('smsgate.username');
-        $baseUrl = config('smsgate.url');
-        $url = "$baseUrl/messages";
+        try {
+            $phone = $this->formatNumber($phoneNumber);
+            $username = config('smsgate.username');
+            $password = config('smsgate.username');
+            $baseUrl = config('smsgate.url');
+            $url = "$baseUrl/messages";
 
-        $response = Http::withBasicAuth($username, $password)->withHeaders([])->post($url, [
-            'textMessage' => [
-                'text' => $message,
-            ],
-            'phoneNumbers' => [$phoneNumber],
-            'withDeliveryReport' => true,
-        ]);
+            $response = Http::withBasicAuth($username, $password)->withHeaders([])->post($url, [
+                'textMessage' => [
+                    'text' => $message,
+                ],
+                'phoneNumbers' => [$phone],
+                'withDeliveryReport' => true,
+            ]);
+        } catch (\Throwable $th) {
+            logger()->error('sms failed', [$th]);
+            // throw the error for the job to fail
+            throw $th;
+        }
 
-        logger()->info("request sent", [$response->json()]);
     }
 
     private function formatNumber($phoneNumber)

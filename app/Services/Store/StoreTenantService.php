@@ -4,7 +4,7 @@ namespace App\Services\Store;
 
 use App\Repositories\InvitationRepository;
 use App\Repositories\UserRepository;
-use App\Services\SMS\SmsService;
+use App\Services\Sms\SmsService;
 
 /**
  * This service allows a company owner to manage the tenants of a given store
