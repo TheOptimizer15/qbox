@@ -19,7 +19,7 @@ class SmsGateService implements SmsService
         try {
             $phone = $this->formatNumber($phoneNumber);
             $username = config('smsgate.username');
-            $password = config('smsgate.username');
+            $password = config('smsgate.password');
             $baseUrl = config('smsgate.url');
             $url = "$baseUrl/messages";
 
