@@ -53,17 +53,23 @@ class InvitationService
             $data['invited_by']
         );
 
+        $store = $invitation->store->name;
+
         /**
          * @var array{
          * name: string,
          * phone_number: string,
-         * email: string
+         * email: string,
+         * role: UserRole,
+         * store: string
          * } $invitationEventData
          */
         $invitationEventData = [
             'name' => $invitation->name,
             'phone_number' => $invitation->phone_number,
             'email' => $invitation->email,
+            'role' => $data['role'],
+            'store' => $store
         ];
 
         InvitationCreatedEvent::dispatch($invitationEventData);

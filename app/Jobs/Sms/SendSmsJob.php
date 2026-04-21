@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Sms;
 
-use App\Services\Sms\SmsProviderInterface;
+use App\Services\Sms\SmsService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -15,14 +15,14 @@ class SendSmsJob implements ShouldQueue
      */
     public function __construct(public string $phoneNumber, public string $message)
     {
-        $this->allOnQueue('sms');
+        $this->onQueue('sms');
         $this->afterCommit();
     }
 
     /**
      * Execute the job.
      */
-    public function handle(SmsProviderInterface $smsProvider): void
+    public function handle(SmsService $smsProvider): void
     {
         $smsProvider->send($this->phoneNumber, $this->message);
     }

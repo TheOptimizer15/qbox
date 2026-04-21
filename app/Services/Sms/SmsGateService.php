@@ -4,7 +4,7 @@ namespace App\Services\Sms;
 
 use Illuminate\Support\Facades\Http;
 
-class SmsGatewayService implements SmsService
+class SmsGateService implements SmsService
 {
     /**
      * Create a new class instance.
@@ -19,7 +19,8 @@ class SmsGatewayService implements SmsService
         $phone = $this->formatNumber($phoneNumber);
         $username = config('smsgate.username');
         $password = config('smsgate.username');
-        $url = config('smsgate.url');
+        $baseUrl = config('smsgate.url');
+        $url = "$baseUrl/messages";
 
         $response = Http::withBasicAuth($username, $password)->withHeaders([])->post($url, [
             'textMessage' => [
@@ -29,6 +30,7 @@ class SmsGatewayService implements SmsService
             'withDeliveryReport' => true,
         ]);
 
+        logger()->info("request sent", [$response->json()]);
     }
 
     private function formatNumber($phoneNumber)
