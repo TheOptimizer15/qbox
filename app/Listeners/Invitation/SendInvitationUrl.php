@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\Invitation;
 
-use App\Events\InvitationCreatedEvent;
+use App\Events\Invitation\InvitationCreatedEvent;
 use App\Jobs\Sms\SendSmsJob;
 
 /**
