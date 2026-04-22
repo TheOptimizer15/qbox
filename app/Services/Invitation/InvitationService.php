@@ -3,7 +3,7 @@
 namespace App\Services\Invitation;
 
 use App\Enums\UserRole;
-use App\Events\InvitationCreatedEvent;
+use App\Events\Invitation\InvitationCreatedEvent;
 use App\Exceptions\ForbiddenException;
 use App\Exceptions\NotFoundException;
 use App\Models\Invitation;

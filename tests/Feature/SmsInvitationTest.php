@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Jobs\Sms\SendSmsJob;
 use App\Models\Store;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Queue;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,7 +20,7 @@ class SmsInvitationTest extends TestCase
     {
         parent::setUp();
         $this->invitationUrl = "{$this->baseUrl}invitations";
-        Bus::fake();
+        Queue::fake();
     }
 
     /**
@@ -42,6 +43,6 @@ class SmsInvitationTest extends TestCase
 
         $response = $this->postJson($this->invitationUrl, $payload);
         $response->assertStatus(201);
-        Bus::assertDispatched(SendSmsJob::class);
+        Queue::assertPushed(SendSmsJob::class);
     }
 }

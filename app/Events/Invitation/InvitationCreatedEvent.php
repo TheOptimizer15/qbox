@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Invitation;
 
 use App\Enums\USerRole;
 use Illuminate\Broadcasting\Channel;

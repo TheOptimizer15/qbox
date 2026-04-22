@@ -7,6 +7,7 @@ use App\Models\Store;
 use App\Models\User;
 use App\Models\Invitation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -33,6 +34,7 @@ class InvitationOwnerTest extends TestCase
      */
     public function test_should_create_invitation()
     {
+        Queue::fake();
         $store = Store::factory()->create();
         $owner = $store->company->owner;
         Sanctum::actingAs($owner);
