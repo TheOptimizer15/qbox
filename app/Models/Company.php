@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 #[Fillable(['name', 'owner_id'])]
 class Company extends Model
 {
+    /** @use HasFactory<\Database\Factories\CompanyFactory> */
     use HasUuids, HasFactory;
 
     /**
