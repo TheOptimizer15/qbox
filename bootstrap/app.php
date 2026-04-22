@@ -2,6 +2,7 @@
 
 use App\Exceptions\ApiException;
 use App\Http\Middleware\AcceptJsonMiddleware;
+use App\Http\Middleware\ActiveUserMiddleware;
 use App\Http\Middleware\AuthorizationMiddleware;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'authorize' => AuthorizationMiddleware::class,
+            'active' => ActiveUserMiddleware::class
         ]);
         $middleware->prepend([AcceptJsonMiddleware::class]);
     })

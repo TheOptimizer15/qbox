@@ -51,6 +51,22 @@ class UserFactory extends Factory
         ]);
     }
 
+     public function manager(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::MANAGER,
+            'store_id' => Store::factory(),
+        ]);
+    }
+
+     public function assistant(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::ASSISTANT,
+            'store_id' => Store::factory(),
+        ]);
+    }
+
     public function owner(): static
     {
         return $this->state(fn (array $attributes) => [
