@@ -1,4 +1,4 @@
-# QBOX (Emma Shop)
+# QBOX
 
 Qbox is a professional and highly powerful multi-tenancy inventory management system with e-commerce features.
 
